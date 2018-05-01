@@ -1,8 +1,3 @@
-#
-# II. Funktionen zur Signalgenerierung
-#   -> signal_from_image
-#
-
 function [signal, gray] = signal_from_image(path)
   printf("Lade Bild..\n");
   rgb_data = imread(path);
