@@ -11,11 +11,11 @@ if img_path
   columns = size(gray, 2)
   
   signal = cast(signal, "double");
-  signal -= 127.5;
+%  signal -= 127.5; %set mean of signal to 0
   
   c = numel(signal);
   figure('Name', ['LMS von ' file ' mit d=x']);
-  [y, e, w] = nlms_mean(signal, 0.5, 5);
+  [y, e, w] = nlms_predecessor(signal, 1, 5);
   subplot(221);
   plot(1:c, signal);
   ylabel("Signal");
@@ -31,7 +31,7 @@ if img_path
   ylabel("Koeffizienten");
   
   figure('Name', 'Bild aus Filter-Ausgabe');
-  y += 127.5;
+%  y += 127.5; %reset signal
   y(y>255) = 255; y(y<0) = 0;
   gen = reshape(y, rows, columns);
   gen = cast(gen, "uint8");
