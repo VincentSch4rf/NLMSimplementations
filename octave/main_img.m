@@ -15,7 +15,7 @@ if img_path
   
   c = numel(signal);
   figure('Name', ['LMS von ' file ' mit d=x']);
-  [y, e, w] = nlms_predecessor(signal, 1, 5);
+  [y, e, w] = nlms_diffPre(signal, 1, 2);
   subplot(221);
   plot(1:c, signal);
   ylabel("Signal");
