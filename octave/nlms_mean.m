@@ -1,4 +1,4 @@
-function [y, e, a] = nlms_mean(x, u, M)
+function [y, e, a, xd] = nlms_mean(x, u, M)
   N = numel(x);
   a = zeros(1,N);
   y = zeros(1,N);

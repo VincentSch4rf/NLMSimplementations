@@ -1,6 +1,6 @@
 function [y, e, a] = nlms_predecessor(x, u, M)
   N = numel(x);
-  a = zeros(1,N);
+  a = zeros(M,N);
   y = zeros(1,N);
   for k = 2:N
     if M < k - 2

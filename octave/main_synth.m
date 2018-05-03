@@ -6,8 +6,8 @@ N = 1000;
 x(1:M) = 100;
 a = sin(2 * pi * [1:M] * 1/M);
 
-axn = @(j) a(j) .* x(n-j);
 for n = M+1: N-1
+  axn = @(j) a(j) .* x (n-j);
   x(n) = sum(axn([1:M])) + randn(1,1)*5;
 end
 

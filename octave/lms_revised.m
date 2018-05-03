@@ -23,7 +23,11 @@ function [y, e, a] = lms_revised(x, u, M)
     #Naechste Filterkoeffizienten nachgefuehrt berechnen
     # a_j[n+1] = a_j[n] + u * e[n] * (x[n-j] / ||x[n]||^2)
     for j = 1:m
-      a(j,n+1) = a(j,n) + u * e(n) * (x(n-j)/absxn);
+      if absxn == 0 #Division durch 0 vermeiden
+        a(j,n+1) = a(j,n);
+      else
+        a(j,n+1) = a(j,n) + u * e(n) * (x(n-j)/absxn);
+      end
     end
   end
 end
