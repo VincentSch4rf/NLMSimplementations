@@ -1,4 +1,4 @@
-function [y, e, a] = nlms_diffPre(x, u, M)
+function [y, e, a] = nlms_diff_pre(x, u, M)
   N = numel(x);
   a = zeros(1,N);
   y = zeros(1,N);

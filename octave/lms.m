@@ -1,21 +1,24 @@
 function [y, e, a] = lms(x, u, M)
-  N = numel(x);
-  a = zeros(1,N);
-  y = zeros(1,N);
-  for k = 2:N
-    if M < k-1
+  N = numel(x); # N = Anzahl Werte des Signals
+  a = zeros(1,N); #Koeffizientenvektor a..
+  y = zeros(1,N); # ..und Ausgabe y mit Nullen initialisieren
+  y(1) = x(1); #Erster Wert von x wird uebernommen
+  for n = 2:N #Fuer jeden Wert des Signals x...
+    if M < n-1
       m = M;
-    else
-      m = k-1;
+    else       #Solange Anzahl(Werte betrachtet) < M..
+      m = n-1; # ..muss M angepasst werden sonst: IndexOutOfBounds
+    end        
+    for j = 1:m #Summe von j=1 bis M
+      y(n) += a(n)*x(n-j); #zu y(n) den Koeffizienten a(n) * x(n-j) addieren
     end
-    for j = 1:m
-      y(k) += a(k)*x(k-j);
+    e(n) = x(n) - y(n); #Berechnung des Fehlers als Differenz von x(n) und y(n)
+    absxn = 0; #||x[n]||^2 = ..
+    for j = 1:m # ..Summe von j=1 bis M..
+      absxn += x(n-j).^2; # ..von x[n-j]^2
     end
-    e(k) = x(k) - y(k);
-    absxn = 0;
-    for j = 1:m
-      absxn += x(k-j).^2;
-    end
-    a(k+1) = a(k) + u*e(k)*(x(k-j)/absxn);
+    #Naechsten Filterkoeffizienten nachgefuehrt berechnen
+    # a[n+1] = a[n] + u * e[n] * (x[n-j] / ||x[n]||^2)
+    a(n+1) = a(n) + u*e(n)*(x(n-j)/absxn);
   end
 end
