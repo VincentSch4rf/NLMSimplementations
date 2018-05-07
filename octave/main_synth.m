@@ -1,42 +1,74 @@
 pkg load signal;
+#graphics_toolkit("gnuplot");
 
 # Signalsynthese
-M = 50;
+M = 5;
 N = 1000;
 x(1:M) = 100;
-a = sin(2 * pi * [1:M] * 1/M);
+#a = [1, -1, 1, -1, 1];
+a = randn(1,M);
+a /= sum(a);
 
-for n = M+1: N-1
-  axn = @(j) a(j) .* x (n-j);
-  x(n) = sum(axn([1:M])) + randn(1,1)*5;
+for n = M+1: N
+  s = 0;
+  for j = 1:M
+    s += a(j) * x(n-j);
+  end
+  x(n) = s + randn(1,1)*5;
 end
 
-figure('Name', 'Synthetisiertes Signal');
+[y, e, w] = lms(x, 0.8, M);
+
+figure('Name', 'Signal / Filter Ausgabe [LMS]');
 subplot(211); 
-plot(1:numel(x), x);
-ylabel("Signal");
+plot(1:numel(x), x); hold on #Synthetisiertes Signal
+plot(1:numel(y), y, 'Color', 'm'); #LMS Ausgabe
+xlabel(["Signal (blau), LMS (pink, u=0.8, M=" num2str(M) ")"]);
 
 subplot(212); 
-plot(1:numel(a), a);
-ylabel("Synthese Koeffizienten");
+plot(1:numel(a), a); hold on #Synthese-Koeffizienten
+slice = w([1:M], N/2) #Vektor aus Koeffizientenmatrix an Stelle N/2 entnehmen
+plot(1:M, slice, 'Color', 'r' ); #LMS-Koeffizienten
+xlabel("Koeffizienten: Synthese (blau), LMS (rot)");
 
-# NLMS
-[y, e, w] = nlms_mean(x, 0.75, 2);
-y(1) = 100; #Schoenerer Graph
-figure('Name', 'NLMS Ausgabe');
-subplot(211);
-plot(1:numel(y), y);
-ylabel("Filter Ausgabe");
+[y2, e2, w2] = nlms_mean(x, 0.8, M);
 
-subplot(212);
-plot(1:numel(w), w);
-ylabel("Filter Koeffizienten");
-
-figure('Name', 'a <=> w/a');
+figure('Name', 'Signal / Filter Ausgabe [NLMS]');
 subplot(211); 
-plot(1:numel(a), a);
-ylabel("Synthese Koeffizienten");
+plot(1:numel(x), x); hold on #Synthetisiertes Signal
+plot(1:numel(y2), y2, 'Color', 'm'); #LMS Ausgabe
+xlabel(["Signal (blau), NLMS (pink, u=0.8, M=" num2str(M) ")"]);
 
-subplot(212);
-plot(1:M, (w(M:2*M-1)./a([1:M])));
-ylabel("Filter/Synthese Koeffizienten");
+subplot(212); 
+plot(1:numel(a), a); hold on #Synthese-Koeffizienten
+slice2 = w2([1:M], N/2) #Vektor aus Koeffizientenmatrix an Stelle N/2 entnehmen
+plot(1:M, slice2, 'Color', 'r' ); #NLMS-Koeffizienten
+xlabel("Koeffizienten: Synthese (blau), NLMS (rot)");
+
+[y3, e3, w3] = nlms_predecessor(x, 0.8, M);
+
+figure('Name', 'Signal / Filter Ausgabe [NLMS_PREDECESSOR]');
+subplot(211); 
+plot(1:numel(x), x); hold on #Synthetisiertes Signal
+plot(1:numel(y3), y3, 'Color', 'm'); #LMS Ausgabe
+xlabel(["Signal (blau), NLMS_{PREDECESSOR} (pink, u=0.8, M=" num2str(M) ")"]);
+
+subplot(212); 
+plot(1:numel(a), a); hold on #Synthese-Koeffizienten
+slice3 = w3([1:M], N/2) #Vektor aus Koeffizientenmatrix an Stelle N/2 entnehmen
+plot(1:M, slice3, 'Color', 'r' ); #NLMS-Koeffizienten
+xlabel("Koeffizienten: Synthese (blau), NLMS (rot)");
+
+[y4, e4, w4] = nlms_predecessor(x, 0.8, M);
+
+figure('Name', 'Signal / Filter Ausgabe [NLMS_DIFF_PRE]');
+subplot(211); 
+plot(1:numel(x), x); hold on #Synthetisiertes Signal
+plot(1:numel(y4), y4, 'Color', 'm'); #LMS Ausgabe
+xlabel(["Signal (blau), NLMS_{DIFF-PRE} (pink, u=0.8, M=" num2str(M) ")"]);
+
+subplot(212); 
+plot(1:numel(a), a); hold on #Synthese-Koeffizienten
+slice4 = w4([1:M], N/2) #Vektor aus Koeffizientenmatrix an Stelle N/2 entnehmen
+plot(1:M, slice4, 'Color', 'r' ); #NLMS-Koeffizienten
+xlabel("Koeffizienten: Synthese (blau), NLMS (rot)");
