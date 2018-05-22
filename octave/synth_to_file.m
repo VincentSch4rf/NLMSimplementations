@@ -2,7 +2,7 @@ pkg load signal;
 #graphics_toolkit("gnuplot");
 
 # Signalsynthese
-M = 5;
+M = 1;
 N = 1000;
 x(1:M) = 1;
 a = rand(1,M)-0.5; % random impulse response
@@ -25,4 +25,4 @@ dtnow = datestr(now,'HH-MM-SS-FFF')
 print (hf, ["gen/synthese_M-" num2str(M) "_N-" num2str(N) "_" dtnow ".pdf"], "-dpdfwrite");
 
 dlmwrite(["gen/synthese_M-" num2str(M) "_N-" num2str(N) "_" dtnow ".txt"],x);
-dlmwrite(["gen/koeffizienten_M-" num2str(M) "_N-" num2str(N) "_" dtnow ".txt"],x);
+dlmwrite(["gen/koeffizienten_M-" num2str(M) "_N-" num2str(N) "_" dtnow ".txt"],a);
